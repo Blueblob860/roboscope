@@ -8,9 +8,7 @@ use roboscope_ipc::{
 use tracing::trace;
 
 use crate::{
-    device::{DEVICES_STREAM, DevicesStream},
-    display::{DISPLAY, FRAME_FINISHED},
-    sdk::touch::TOUCH_SUBSCRIBER,
+    device::{DEVICES_STREAM, DevicesStream}, display::{DISPLAY, FRAME_FINISHED}, sdk::{controller::{PRIMARY_CONTROLLER_SUB, SECONDARY_CONTROLLER_SUB}, touch::TOUCH_SUBSCRIBER},
 };
 
 pub fn start(name: &str) -> anyhow::Result<()> {
@@ -29,6 +27,20 @@ pub fn start(name: &str) -> anyhow::Result<()> {
             .subscriber_builder()
             .create()
             .unwrap(),
+    );
+    *PRIMARY_CONTROLLER_SUB.lock() = Some(
+        ipc.primary_controller_input()
+            .unwrap()
+            .subscriber_builder()
+            .create()
+            .unwrap()
+    );
+    *SECONDARY_CONTROLLER_SUB.lock() = Some(
+        ipc.secondary_controller_input()
+            .unwrap()
+            .subscriber_builder()
+            .create()
+            .unwrap()
     );
 
     thread::Builder::new()

@@ -25,6 +25,7 @@ pub type Sample<T> = iceoryx2::sample::Sample<ipc::Service, T, ()>;
 pub use iceoryx2::config::Config;
 
 pub mod cmd;
+pub mod controller;
 pub mod display;
 pub mod error;
 pub mod snapshot;
@@ -80,6 +81,14 @@ impl SimServices {
 
     pub fn device_readings(&self) -> SimResult<PubSubFactory<snapshot::DeviceReadings>> {
         self.pub_sub("vexide/roboscope/device_readings")
+    }
+
+    pub fn primary_controller_input(&self) -> SimResult<PubSubFactory<controller::ControllerInput>> {
+        self.pub_sub("vexide/roboscope/primary_controller_input")
+    }
+
+    pub fn secondary_controller_input(&self) -> SimResult<PubSubFactory<controller::ControllerInput>> {
+        self.pub_sub("vexide/roboscope/secondary_controller_input")
     }
 
     pub fn publish_device_readings(
